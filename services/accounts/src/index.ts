@@ -28,13 +28,16 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  if (sessionManager.validateSession(req.body["sessionId"])) {
+  if (sessionManager.validateSession(req.body["session_id"])) {
     res.send("Already logged in");
     return;
   }
 
   if (userManager.authenticate(req.body["username"], req.body["password"])) {
-    res.cookie("sessionId", sessionManager.createSession(req.body["username"]));
+    res.cookie(
+      "session_id",
+      sessionManager.createSession(req.body["username"]),
+    );
 
     // TODO: Redirect to a protected page
     res.send("Login successful, session created");
@@ -45,8 +48,8 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  if (sessionManager.validateSession(req.body["sessionId"])) {
-    sessionManager.destroySession(req.body["sessionId"]);
+  if (sessionManager.validateSession(req.body["session_id"])) {
+    sessionManager.destroySession(req.body["session_id"]);
 
     // TODO: Redirect to login page
     res.redirect("/login");
