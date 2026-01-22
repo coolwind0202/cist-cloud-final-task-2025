@@ -1,0 +1,11 @@
+services:
+  accounts:
+    build: accounts
+    ports:
+      - "3000:3000"
+  cart:
+    build: cart
+    ports:
+      - "9000:9000"
+    env_file:
+      - ./cart/.env
