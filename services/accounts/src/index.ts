@@ -65,6 +65,12 @@ app.post("/register", (req, res) => {
   }
 });
 
+app.post("/session", (req, res) => {
+  const username = sessionManager.getSessionUsername(req.body["sessionId"]);
+
+  res.send({ valid: username !== undefined, username });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

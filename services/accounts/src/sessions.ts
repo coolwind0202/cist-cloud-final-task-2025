@@ -4,6 +4,7 @@ interface BaseSessionManager {
   createSession(username: Username): SessionId;
   validateSession(sessionId: SessionId): boolean;
   destroySession(sessionId: SessionId): void;
+  getSessionUsername(sessionId: SessionId): Username | undefined;
 }
 
 export class MemorySessionManager implements BaseSessionManager {
@@ -26,5 +27,9 @@ export class MemorySessionManager implements BaseSessionManager {
 
   destroySession(sessionId: SessionId): void {
     this.sessions.delete(sessionId);
+  }
+
+  getSessionUsername(sessionId: SessionId): Username | undefined {
+    return this.sessions.get(sessionId);
   }
 }
