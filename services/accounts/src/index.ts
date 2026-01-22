@@ -18,13 +18,19 @@ app.get("/", (req, res) => {
 
 app.get("/login", (req, res) => {
   res.send(
-    "<form method='post' action='/login'><input name='username'/><input name='password' type='password'/><button type='submit'>Login</button></form>",
+    `
+    <form method='post' action='/login'><input name='username'/><input name='password' type='password'/><button type='submit'>Login</button></form>
+    <a href='/register'>Register</a>
+    `,
   );
 });
 
 app.get("/register", (req, res) => {
   res.send(
-    "<form method='post' action='/register'><input name='username'/><input name='password' type='password'/><button type='submit'>Register</button></form>",
+    `
+    <form method='post' action='/register'><input name='username'/><input name='password' type='password'/><button type='submit'>Register</button></form>
+    <a href='/login'>Login</a>
+    `,
   );
 });
 
@@ -63,7 +69,10 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
   try {
     userManager.add(req.body["username"], req.body["password"]);
-    res.send("User registered successfully");
+    res.send(`
+      <p>User registered successfully</p>
+      <a href='/login'>Login</a>
+    `);
   } catch (e) {
     res.send("User registration failed: " + (e as Error).message);
   }
