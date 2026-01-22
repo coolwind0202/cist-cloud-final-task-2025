@@ -2,8 +2,10 @@ from fastapi import FastAPI
 import aiohttp
 import os
 
+import cart
+
 app = FastAPI()
-carts = {}
+cart_manager = cart.MemoryCartManager()
 
 async def fetch_username_by_session_id(session_id: str) -> str | None:
     # TODO: Remove this hardcoded admin check after implementing proper session management
@@ -24,7 +26,7 @@ async def get_cart(username: str, session_id: str):
     if username_from_session != username:
         return {"error": "Unauthorized"}
 
-    return {"session_id": session_id, "username": username, "items": carts.get(username, [])}
+    return {"session_id": session_id, "username": username, "items": cart_manager.get_cart(username)}
 
 @app.put("/carts/{username}/{item_id}")
 async def add_to_cart(username: str, session_id: str, item_id: int, quantity: int):
@@ -32,8 +34,6 @@ async def add_to_cart(username: str, session_id: str, item_id: int, quantity: in
     if username_from_session != username:
         return {"error": "Unauthorized"}
 
-    if username not in carts:
-        carts[username] = {}
-    carts[username][item_id] = {"item_id": item_id, "quantity": quantity}
+    cart_manager.update_cart_entry(username, item_id, quantity)
 
-    return {"session_id": session_id, "username": username, "items": carts[username]}
+    return {"session_id": session_id, "username": username, "items": cart_manager.get_cart(username)}
