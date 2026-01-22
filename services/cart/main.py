@@ -5,7 +5,18 @@ import os
 import cart
 
 app = FastAPI()
-cart_manager = cart.MemoryCartManager()
+
+def get_cart_manager() -> cart.BaseCartManager:
+    redis_host = os.getenv('REDIS_HOST')
+    redis_port = int(os.getenv('REDIS_PORT', '6379'))
+    redis_db = int(os.getenv('REDIS_DB', '0'))
+
+    if redis_host:
+        return cart.RedisCartManager(host=redis_host, port=redis_port, db=redis_db)
+    else:
+        return cart.MemoryCartManager()
+
+cart_manager = get_cart_manager()
 
 async def fetch_username_by_session_id(session_id: str) -> str | None:
     # TODO: Remove this hardcoded admin check after implementing proper session management
