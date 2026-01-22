@@ -1,4 +1,4 @@
-import { Password, Username } from "./types.ts";
+import type { Password, Username } from "./types.js";
 
 interface BaseUserManager {
   add(username: Username, password: Password): void;

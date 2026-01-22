@@ -1,4 +1,4 @@
-import { SessionId, Username } from "./types.ts";
+import type { SessionId, Username } from "./types.js";
 
 interface BaseSessionManager {
   createSession(username: Username): SessionId;

@@ -1,7 +1,7 @@
 import express from "express";
-import { MemoryUserManager } from "./users.ts";
-import { MemorySessionManager } from "./sessions.ts";
-import { SessionId } from "./types.ts";
+import { MemoryUserManager } from "./users.js";
+import { MemorySessionManager } from "./sessions.js";
+import type { SessionId } from "./types.js";
 
 const app = express();
 const port = 3000;
