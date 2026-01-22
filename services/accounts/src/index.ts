@@ -1,6 +1,7 @@
 import express from "express";
 import { MemoryUserManager } from "./users.ts";
 import { MemorySessionManager } from "./sessions.ts";
+import { SessionId } from "./types.ts";
 
 const app = express();
 const port = 3000;
@@ -68,10 +69,15 @@ app.post("/register", (req, res) => {
   }
 });
 
-app.post("/session", (req, res) => {
-  const username = sessionManager.getSessionUsername(req.body["sessionId"]);
-
-  res.send({ valid: username !== undefined, username });
+app.get("/sessions/{:session_id}/username", (req, res) => {
+  const username = sessionManager.getSessionUsername(
+    (req.params?.session_id ?? "") as SessionId,
+  );
+  if (username === undefined) {
+    res.status(404).send({ error: "Session not found" });
+    return;
+  }
+  res.send({ username });
 });
 
 app.listen(port, () => {
