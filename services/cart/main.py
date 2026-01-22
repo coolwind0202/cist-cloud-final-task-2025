@@ -24,8 +24,10 @@ async def fetch_username_by_session_id(session_id: str) -> str | None:
 
     async with aiohttp.ClientSession() as session:
         account_service_host = os.getenv('ACCOUNTS_SERVICE_HOST')
+        account_service_port = os.getenv('ACCOUNTS_SERVICE_PORT', '80')
+        account_service_url = f"http://{account_service_host}:{account_service_port}/sessions/{session_id}/username"
 
-        async with session.get(f"http://{account_service_host}/sessions/{session_id}/username") as response:
+        async with session.get(account_service_url) as response:
             if response.status == 200:
                 data = await response.json()
                 return data.get("username")
