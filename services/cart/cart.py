@@ -24,8 +24,8 @@ class MemoryCartManager(BaseCartManager):
       return self.carts[username]
 
 class RedisCartManager(BaseCartManager):
-    def __init__(self, host, port, db, client_id):
-        self.redis_client = redis.StrictRedis(host=host, port=port, db=db, decode_responses=True)
+    def __init__(self, host, port, password, client_id):
+        self.redis_client = redis.StrictRedis(host=host, port=port, password=password, decode_responses=True)
         self.client_id = client_id
 
     def get_cart(self, username: str) -> dict:

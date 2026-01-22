@@ -9,19 +9,17 @@ app = FastAPI()
 def get_cart_manager() -> cart.BaseCartManager:
     redis_host = os.getenv('REDIS_HOST')
     redis_port = int(os.getenv('REDIS_PORT', '6379'))
-    redis_db = int(os.getenv('REDIS_DB', '0'))
+    redis_pass = os.getenv('REDIS_PASS')
+    redis_client_id = os.getenv('REDIS_CLIENT_ID')
 
     if redis_host:
-        return cart.RedisCartManager(host=redis_host, port=redis_port, db=redis_db)
+        return cart.RedisCartManager(host=redis_host, port=redis_port, password=redis_pass, client_id=redis_client_id)
     else:
         return cart.MemoryCartManager()
 
 cart_manager = get_cart_manager()
 
 async def fetch_username_by_session_id(session_id: str) -> str | None:
-    # TODO: Remove this hardcoded admin check after implementing proper session management
-    return "admin"
-
     async with aiohttp.ClientSession() as session:
         account_service_host = os.getenv('ACCOUNTS_SERVICE_HOST')
         account_service_port = os.getenv('ACCOUNTS_SERVICE_PORT', '80')
