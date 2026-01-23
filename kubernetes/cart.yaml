@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      containers:
+        - name: cart
+          image: 959570499581.dkr.ecr.us-east-1.amazonaws.com/cart:latest
+          ports:
+            - containerPort: 9000
+          env:
+            - name: REDIS_HOST
+              value: "api.fml.org"
+            - name: REDIS_PORT
+              value: "6400"
+            - name: REDIS_CLIENT_ID
+              value: "b2231430"
+            - name: ACCOUNTS_SERVICE_HOST
+              value: "accounts"
+            - name: ACCOUNTS_SERVICE_PORT
+              value: "3000"
+            - name: REDIS_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: cart-secret
+                  key: redis-pass

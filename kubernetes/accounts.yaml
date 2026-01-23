@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accounts
+  template:
+    metadata:
+      labels:
+        app: accounts
+    spec:
+      initContainers:
+      - name: prisma-migrate
+        image: 959570499581.dkr.ecr.us-east-1.amazonaws.com/accounts:latest
+        command: ["pnpx", "prisma", "migrate", "deploy"]
+      containers:
+      - name: accounts
+        image: 959570499581.dkr.ecr.us-east-1.amazonaws.com/accounts:latest
+        ports:
+        - containerPort: 3000
+          name: http
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
