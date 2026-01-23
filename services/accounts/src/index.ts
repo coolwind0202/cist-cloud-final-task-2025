@@ -34,13 +34,17 @@ app.get("/register", (req, res) => {
   );
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   if (sessionManager.validateSession(req.body["session_id"])) {
     res.send("Already logged in");
     return;
   }
 
-  if (userManager.authenticate(req.body["username"], req.body["password"])) {
+  const isAuthenticated = await userManager.authenticate(
+    req.body["username"],
+    req.body["password"],
+  );
+  if (isAuthenticated) {
     res.cookie(
       "session_id",
       sessionManager.createSession(req.body["username"]),
@@ -54,7 +58,7 @@ app.post("/login", (req, res) => {
   res.redirect("/login");
 });
 
-app.post("/logout", (req, res) => {
+app.post("/logout", async (req, res) => {
   if (sessionManager.validateSession(req.body["session_id"])) {
     sessionManager.destroySession(req.body["session_id"]);
 
@@ -66,9 +70,9 @@ app.post("/logout", (req, res) => {
   res.send("You are not logged in");
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   try {
-    userManager.add(req.body["username"], req.body["password"]);
+    await userManager.add(req.body["username"], req.body["password"]);
     res.send(`
       <p>User registered successfully</p>
       <a href='/login'>Login</a>
