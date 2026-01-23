@@ -46,7 +46,7 @@ resource "aws_db_subnet_group" "rds_sng" {
 }
 
 data "aws_eks_cluster" "eks" {
-  name = "peculiar-funk-dinosaur"
+  name = "ferocious-folk-dinosaur"
 }
 
 resource "aws_security_group" "rds_sg" {
@@ -73,7 +73,7 @@ resource "aws_db_instance" "accounts" {
   db_name                = "accounts"
   engine                 = "mysql"
   instance_class         = "db.t3.micro"
-  allocated_storage      = 2
+  allocated_storage      = 10
   username               = "admin"
   password               = "f3zxsad7"
   db_subnet_group_name   = aws_db_subnet_group.rds_sng.name
